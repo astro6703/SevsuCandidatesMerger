@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SevsuCandidatesMerger", "SevsuCandidatesMerger.fsproj", "{BD408063-CD74-4478-9E5B-E2FB2EE563ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BD408063-CD74-4478-9E5B-E2FB2EE563ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD408063-CD74-4478-9E5B-E2FB2EE563ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD408063-CD74-4478-9E5B-E2FB2EE563ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD408063-CD74-4478-9E5B-E2FB2EE563ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
