@@ -9,25 +9,33 @@ let private nameColumnIndex = 2
 let private scoreColumnIndex = 3
 let private isPrivilegedColumnIndex = 9
 
-let private courseNameToTableFirstRowOffset = 5;
-
-let private getTableLastRow (worksheet: ExcelWorksheet)
-                            (tableStartRow: int)
-                            : int =
-    let mutable row = tableStartRow
+let private iterateThroughRowsUntil (exitCondition: string -> bool)
+                                    (startRow: int)
+                                    (worksheet: ExcelWorksheet)
+                                    : int =
+    let mutable row = startRow
     let mutable rowText = worksheet.Cells.[row, 1].Text
-    while rowText <> "Списки поступающих" || rowText = String.Empty do
+    while not <| exitCondition rowText do
         row <- row + 1
         rowText <- worksheet.Cells.[row, 1].Text
 
     row - 1
 
-let private readCandidatesTable (worksheet: ExcelWorksheet)
-                                (tableStartRow: int)
-                                : Candidate list =
-    let tableLastRow = getTableLastRow worksheet tableStartRow
+let private getTableFirstRow (tableCourseNameRow: int)
+                             (worksheet: ExcelWorksheet)
+                             : int =
+    iterateThroughRowsUntil (fun x -> x = "2") tableCourseNameRow worksheet
 
-    [tableStartRow .. tableLastRow]
+let private getTableLastRow (tableStartRow: int)
+                            (worksheet: ExcelWorksheet)
+                            : int =
+    iterateThroughRowsUntil (fun x -> x = "Списки поступающих" || x = String.Empty) tableStartRow worksheet
+
+let private readCandidatesTable (tableFirstRow: int)
+                                (tableLastRow: int)
+                                (worksheet: ExcelWorksheet)
+                                : Candidate list =
+    [tableFirstRow .. tableLastRow]
     |> List.map (fun row ->
         let getCellTextByIndex (columnIndex: int): string =
             worksheet.Cells.[row, columnIndex].Text
@@ -56,7 +64,9 @@ let getCandidatesByCourse (excelFile: FileInfo)
 
         if courseNames |> List.exists (fun name -> cellText.Contains name) then
             let matchedCourse = courses |> List.filter (fun x -> cellText.Contains x.Name) |> List.exactlyOne
-            let matchedCourseCandidates = readCandidatesTable worksheet (row + courseNameToTableFirstRowOffset)
+            let tableFirstRow = getTableFirstRow row worksheet
+            let tableLastRow = getTableLastRow tableFirstRow worksheet
+            let matchedCourseCandidates = readCandidatesTable tableFirstRow tableLastRow worksheet
 
             candidatesByCourse <- candidatesByCourse.Add(matchedCourse, matchedCourseCandidates)
     )
