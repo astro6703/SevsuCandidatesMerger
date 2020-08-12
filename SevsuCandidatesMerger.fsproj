@@ -7,6 +7,9 @@
 
     <ItemGroup>
         <Compile Include="Common.fs" />
+        <Compile Include="Utils.fs" />
+        <Compile Include="Config.fs" />
+        <Compile Include="ExcelParser.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
