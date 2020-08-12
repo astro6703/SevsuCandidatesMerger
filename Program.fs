@@ -3,7 +3,16 @@
 open System
 open System.IO
 open System.Text
+open Argu
 open SevsuCandidatesMerger.Common
+
+type Arguments =
+    | [<Unique>] Excel_File of path: string
+
+    interface IArgParserTemplate with
+        member s.Usage =
+            match s with
+            | Excel_File _ -> "specify a xls or xlsx file."
 
 let private takeCourseCandidates (allCandidates: Candidate list)
                                  (takenCandidates: Candidate list)
@@ -31,9 +40,13 @@ let private writeCourseToConsole (course: Course)
             (index + 1) candidate.Name candidate.Score isPrivilegedClause
     )
 
-let main: int =
-    let excelFilePath = System.Environment.GetCommandLineArgs() |> Array.skip(1) |> Array.exactlyOne
-    let excelFile = FileInfo excelFilePath
+[<EntryPoint>]
+let main (argv: string[]): int =
+    let nullErrorHandler = ProcessExiter()
+    let argumentParser = ArgumentParser.Create<Arguments>(errorHandler = nullErrorHandler)
+    let parseResults = argumentParser.Parse()
+
+    let excelFile = FileInfo (parseResults.GetResult Arguments.Excel_File)
     let courses = Config.courses
     let allCandidatesByCourse = ExcelParser.getCandidatesByCourse excelFile courses
 
