@@ -1,35 +1,9 @@
-﻿open System
+﻿module SevsuCandidatesMerger.Program
+
+open System
 open System.IO
-open System.Globalization
 open System.Text
-open CsvHelper
-open CsvHelper.Configuration
-
-[<CLIMutable>]
-type Candidate = {
-    Name: string
-    Score: int;
-}
-
-type Course = {
-    Name: string;
-    Priority: int
-    Capacity: int;
-    CsvName: string;
-}
-
-type CandidateMap() =
-    inherit ClassMap<Candidate>()
-    do
-        base.Map(fun x -> x.Name).Name("Name") |> ignore
-        base.Map(fun x -> x.Score).Name("Score") |> ignore
-
-let private getCandidatesByCourse (course: Course): Candidate list =
-    use streamReader = new StreamReader(course.CsvName)
-    use csvReader = new CsvReader(streamReader, CultureInfo.InvariantCulture)
-    csvReader.Configuration.RegisterClassMap<CandidateMap>() |> ignore
-
-    List.ofSeq (csvReader.GetRecords<Candidate>())
+open SevsuCandidatesMerger.Common
 
 let private takeCourseCandidates (allCandidates: Candidate list)
                                  (takenCandidates: Candidate list)
@@ -37,7 +11,7 @@ let private takeCourseCandidates (allCandidates: Candidate list)
                                  : Candidate list =
     allCandidates
     |> List.except takenCandidates
-    |> List.sortByDescending (fun x -> x.Score)
+    |> List.sortByDescending (fun x -> x.IsPrivileged, x.Score)
     |> List.take threshold
 
 let private writeCourseToConsole (course: Course) (candidates: Candidate list): unit =
@@ -60,6 +34,10 @@ let main: int =
         { Name = "Программная инженерия"; Priority = 4; Capacity = 22; CsvName = "progi.csv" }
         { Name = "Управление в технических системах"; Capacity = 40; Priority = 5; CsvName = "a.csv" }
     ]
+    let excelFilePath = System.Environment.GetCommandLineArgs() |> Array.skip(1) |> Array.exactlyOne
+    let excelFile = FileInfo excelFilePath
+    let courses = Config.courses
+    let allCandidatesByCourse = ExcelParser.getCandidatesByCourse excelFile courses
 
     let mutable takenCandidates = []
     let allCandidatesByCourse =
