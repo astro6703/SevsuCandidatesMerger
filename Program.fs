@@ -34,7 +34,7 @@ let private writeCourseToConsole (course: Course)
     |> List.iter (fun x ->
         let index, candidate = x
 
-        let isPrivilegedClause = (if candidate.IsPrivileged then "*".PadRight(6) else String.Empty)
+        let isPrivilegedClause = if candidate.IsPrivileged then "*".PadRight(6) else String.Empty
 
         printfn "%3i%50s%8i%15s"
             (index + 1) candidate.Name candidate.Score isPrivilegedClause
