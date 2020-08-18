@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SevsuCandidatesMerger", "SevsuCandidatesMerger.fsproj", "{BD408063-CD74-4478-9E5B-E2FB2EE563ED}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SevsuCandidatesMerger", "SevsuCandidatesMerger\SevsuCandidatesMerger.fsproj", "{BD408063-CD74-4478-9E5B-E2FB2EE563ED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
