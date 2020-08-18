@@ -41,7 +41,7 @@ let private writeCourseToConsole (course: Course)
     )
 
 [<EntryPoint>]
-let main (argv: string[]): int =
+let main (_: string[]): int =
     let nullErrorHandler = ProcessExiter()
     let argumentParser = ArgumentParser.Create<Arguments>(errorHandler = nullErrorHandler)
     let parseResults = argumentParser.Parse()
