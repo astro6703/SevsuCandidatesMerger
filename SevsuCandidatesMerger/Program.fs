@@ -1,10 +1,10 @@
 ﻿module SevsuCandidatesMerger.Program
 
+open Argu
+open SevsuCandidatesMerger.Common
 open System
 open System.IO
 open System.Text
-open Argu
-open SevsuCandidatesMerger.Common
 
 type Arguments =
     | [<Unique>] Excel_File of path: string
@@ -26,7 +26,7 @@ let private takeCourseCandidates (allCandidates: Candidate list)
 let private writeCourseToConsole (course: Course)
                                  (candidates: Candidate list)
                                  : unit =
-    printfn "%s%s:" Environment.NewLine course.Name
+    printfn $"{Environment.NewLine}{course.Name}:"
     printfn "%3s%50s%8s%15s" "№" "ФИО" "Баллы" "Особое право"
 
     candidates
@@ -36,8 +36,7 @@ let private writeCourseToConsole (course: Course)
 
         let isPrivilegedClause = if candidate.IsPrivileged then "*".PadRight(6) else String.Empty
 
-        printfn "%3i%50s%8i%15s"
-            (index + 1) candidate.Name candidate.Score isPrivilegedClause
+        printfn $"%3i{index + 1}%50s{candidate.Name}%8i{candidate.Score}%15s{isPrivilegedClause}"
     )
 
 [<EntryPoint>]

@@ -1,9 +1,9 @@
 ﻿module SevsuCandidatesMerger.ExcelParser
 
-open System
-open System.IO
 open OfficeOpenXml
 open SevsuCandidatesMerger.Common
+open System
+open System.IO
 
 let private nameColumnIndex = 2
 let private scoreColumnIndex = 3
@@ -42,7 +42,7 @@ let private readCandidatesTable (tableFirstRow: int)
 
         let candidateName = getCellTextByIndex nameColumnIndex
         let isCandidatePrivileged = getCellTextByIndex isPrivilegedColumnIndex <> String.Empty
-        let candidateScore = (int) (getCellTextByIndex scoreColumnIndex)
+        let candidateScore = int (getCellTextByIndex scoreColumnIndex)
 
         { Name = candidateName; Score = candidateScore; IsPrivileged = isCandidatePrivileged }
     )
@@ -50,7 +50,7 @@ let private readCandidatesTable (tableFirstRow: int)
 let getCandidatesByCourse (excelFile: FileInfo)
                           (courses: Course list)
                           : Map<Course, Candidate list> =
-    ExcelPackage.LicenseContext <- (Nullable<LicenseContext>) LicenseContext.NonCommercial
+    ExcelPackage.LicenseContext <- Nullable<LicenseContext> LicenseContext.NonCommercial
     use package = new ExcelPackage(excelFile)
     let worksheet = package.Workbook.Worksheets.[0]
     let fileStart = worksheet.Dimension.Start
@@ -62,7 +62,7 @@ let getCandidatesByCourse (excelFile: FileInfo)
     |> List.iter (fun row ->
         let cellText = worksheet.Cells.[row, 1].Text
 
-        if courseNames |> List.exists (fun name -> cellText.Contains name) then
+        if courseNames |> List.exists cellText.Contains then
             let matchedCourse = courses |> List.filter (fun x -> cellText.Contains x.Name) |> List.exactlyOne
             let tableFirstRow = getTableFirstRow row worksheet
             let tableLastRow = getTableLastRow tableFirstRow worksheet

@@ -3,9 +3,9 @@
 let getValues (map: Map<'a, 'b>): 'b list =
     map
     |> Map.toList
-    |> List.map (fun x -> snd x)
+    |> List.map snd
 
 let collectMapValuesLists (map: Map<'a, 'b list>) =
     map
     |> getValues
-    |> List.collect (fun x -> x)
+    |> List.collect id
